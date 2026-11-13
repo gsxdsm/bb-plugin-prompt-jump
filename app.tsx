@@ -20,6 +20,11 @@ const USER_BUBBLE = "[data-message-column] > .ml-auto";
 // to its left; without it, ours floats in the chat's bottom-right corner.
 const LATEST_BUTTON = 'button[aria-label="Scroll to latest event"]';
 
+// Top margin of the arrows in bb's zero-height row at the top of the composer.
+// In that row the arrow's center sits at half this offset: 21px above the
+// composer, in the gap below the last message.
+const ARROW_OFFSET = "-42px";
+
 const TOP_MARGIN = 12; // px of space left above the message we land on
 const EPSILON = 4; // px; a message closer than this to the top counts as "here"
 const MAX_PAGE_STEPS = 400;
@@ -53,7 +58,9 @@ const STYLES = `
   right: auto;
   bottom: auto;
   flex-shrink: 0;
-  margin: -5rem 8px 0 -40px;
+  width: 24px;
+  height: 24px;
+  margin: ${ARROW_OFFSET} 8px 0 -32px;
   background: var(--background);
   box-shadow: none;
   opacity: 1;
@@ -61,6 +68,15 @@ const STYLES = `
 }
 [${BUTTON_ATTR}][data-inline]:hover { background: var(--accent); transform: none; }
 [${BUTTON_ATTR}][data-inline][data-hidden] { display: flex; visibility: hidden; }
+[${BUTTON_ATTR}][data-inline] svg { width: 14px; height: 14px; }
+/* bb's own arrow: same smaller size and lower position, so the two arrows sit
+   in the gap above the composer instead of over the last message. */
+${LATEST_BUTTON} {
+  width: 24px !important;
+  height: 24px !important;
+  margin-top: ${ARROW_OFFSET} !important;
+}
+${LATEST_BUTTON} svg { width: 14px; height: 14px; }
 [${BUTTON_ATTR}][data-busy] { opacity: 0.5; cursor: progress; }
 [${BUTTON_ATTR}] svg { width: 16px; height: 16px; }
 `;
