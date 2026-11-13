@@ -1,6 +1,6 @@
 # Prompt Jump
 
-A bb plugin that adds a round up-arrow button next to bb's scroll-to-latest button in each thread's chat.
+A bb plugin that adds a round up-arrow button above the composer in each thread's chat. The up arrow is centered when it is the only visible button; when bb's scroll-to-latest arrow appears, the pair is centered together.
 
 - **Click**: scroll up to your previous message. Click again to keep stepping back.
 - **Shift-click**: step forward to the next of your messages.

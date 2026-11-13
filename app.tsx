@@ -16,8 +16,6 @@ const STYLE_ID = "prompt-jump-style";
 const TIMELINE = "[data-timeline-items]";
 const ROW = "[data-timeline-row-id]";
 const USER_BUBBLE = "[data-message-column] > .ml-auto";
-// bb's own round "scroll to latest" button above the composer. Ours goes just
-// to its left; without it, ours floats in the chat's bottom-right corner.
 const LATEST_BUTTON = 'button[aria-label="Scroll to latest event"]';
 
 // Top margin of the arrows in bb's zero-height row at the top of the composer.
@@ -32,8 +30,9 @@ const MAX_PAGE_STEPS = 400;
 const STYLES = `
 [${BUTTON_ATTR}] {
   position: absolute;
-  right: 16px;
+  left: 50%;
   bottom: 16px;
+  translate: -50% 0;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -51,23 +50,24 @@ const STYLES = `
 }
 [${BUTTON_ATTR}]:hover { opacity: 1; transform: translateY(-1px); }
 [${BUTTON_ATTR}][data-hidden] { display: none; }
-/* Beside bb's scroll-to-latest button: same shape and offset, net zero width
-   so bb's button stays centered. */
 [${BUTTON_ATTR}][data-inline] {
   position: relative;
-  right: auto;
+  left: auto;
   bottom: auto;
+  translate: none;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  margin: ${ARROW_OFFSET} 8px 0 -32px;
+  margin: ${ARROW_OFFSET} 8px 0 0;
   background: var(--background);
   box-shadow: none;
   opacity: 1;
   transition: background-color 200ms;
 }
 [${BUTTON_ATTR}][data-inline]:hover { background: var(--accent); transform: none; }
-[${BUTTON_ATTR}][data-inline][data-hidden] { display: flex; visibility: hidden; }
+[${BUTTON_ATTR}][data-inline][data-hidden] { display: none; }
+[${BUTTON_ATTR}][data-inline]:has(~ ${LATEST_BUTTON}.invisible) { margin-right: 0; }
+[${BUTTON_ATTR}][data-inline] ~ ${LATEST_BUTTON}.invisible { display: none !important; }
 [${BUTTON_ATTR}][data-inline] svg { width: 14px; height: 14px; }
 /* bb's own arrow: same smaller size and lower position, so the two arrows sit
    in the gap above the composer instead of over the last message. */
@@ -251,8 +251,6 @@ export default definePluginApp((app) => {
         updateVisibility(area);
       };
 
-      // Keep each button beside bb's scroll-to-latest button, which bb mounts
-      // and unmounts with the composer; fall back to the chat's corner.
       const place = (area: HTMLElement, button: HTMLButtonElement) => {
         const latest = Array.from(
           area.querySelectorAll<HTMLElement>(LATEST_BUTTON),
